@@ -1,0 +1,16 @@
+The lifeCycle of a thread in Java consists of several states 
+ which a thread can move through during its execution
+ 
+ 1) new: created but not started
+ World t1 = new World();
+ 
+ 2) Runnable : after the start method is called , the thread becomes runnable.
+  It's ready to run nd waiting forCPU time
+  t1.start();
+ 
+ 3)Running : The thread is in the state when it is executing
+ run();
+ 
+ 4)Blocked : when it is wair=ting for a resource or for the another thread to perform an action
+ 
+ 5)Terminated : A thread is in the state when it has finished executing

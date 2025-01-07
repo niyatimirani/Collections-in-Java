@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	<script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Visualizer</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+#array-container {
+    display: flex;
+    margin: 20px;
+}
+
+.bar {
+    width: 20px;
+    margin: 0 2px;
+    background-color: teal;
+    display: inline-block;
+    transition: height 0.3s;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Sorting Visualizer</h1>
+	<div data-role="page" id="page-1">
+		<div data-role="header">
+			<h1>Page Title</h1>
+		</div>
+		<div data-role="content">
+			<p>Page content goes here.</p>
+		</div>
+		<div data-role="footer">
+			<h4>Page Footer</h4>
+		</div>
+	</div>
+    <div id="array-container"></div>
+    <button id="generate-array">Generate Array</button>
+    <button id="start-sort">Start Sorting</button>
+
+    <script>
+    let array = [];
+
+document.getElementById('generate-array').addEventListener('click', generateArray);
+document.getElementById('start-sort').addEventListener('click', startSorting);
+
+function generateArray() {
+    array = Array.from({ length: 20 }, () => Math.floor(Math.random() * 100) + 1);
+    renderArray();
+}
+
+function renderArray() {
+    const container = document.getElementById('array-container');
+    container.innerHTML = '';
+    array.forEach(value => {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = `${value * 3}px`; // Scale for better visibility
+        container.appendChild(bar);
+    });
+}
+
+async function startSorting() {
+    const response = await fetch('/sort', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ array })
+    });
+    const sortedArray = await response.json();
+    visualizeSorting(sortedArray);
+}
+
+function visualizeSorting(sortedArray) {
+    const container = document.getElementById('array-container');
+    container.innerHTML = '';
+    sortedArray.forEach((value, index) => {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = `${value * 3}px`;
+        bar.style.backgroundColor = 'orange'; // Change color to indicate sorting
+        container.appendChild(bar);
+        // Add a delay for visualization
+        setTimeout(() => {
+            bar.style.height = `${value * 3}px`;
+        }, index * 100);
+    });
+}
+    </script>
+</body>
+</html>
